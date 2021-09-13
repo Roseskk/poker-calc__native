@@ -4,17 +4,13 @@ import {StyleSheet, TouchableOpacity, Text, Button, View} from 'react-native';
 export default class Rooms extends Component {
     constructor(props) {
         super(props);
-        this.test = this.test.bind(this)
-    }
-
-    test(name) {
-        console.log(name)
+        this.state = { isActiveRoom : true }
     }
 
     render() {
         return(
             <TouchableOpacity
-                onPress={()=>this.test(this.props.id)}
+                onPress={()=>this.props.showItems(this.props.id, this.props.name)}
                 style={styles.container}
             >
                 <Text style={styles.text} >{this.props.name}</Text>
