@@ -1,19 +1,39 @@
 import React, {Component} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import Rooms from "./src/rooms/Rooms";
 import FooterMenu from "./src/footer-menu/footer-menu";
-import EvCalc from "./src/ev-calc/EvCalc";
+
+import {_URL} from "./config.api";
 
 export default class App extends Component {
     constructor(props) {
         super(props);
-
+        this.state = {room : []}
     }
-  render() {
+
+    componentDidMount() {
+        const url = 'https://mtb.ibnd.ru/api/rooms'
+        fetch(_URL + 'rooms')
+            .then(response => response.json())
+            .then(data => {
+                this.setState({room : data})
+            })
+    }
+
+    render() {
     return (
         <View style={styles.container}>
           <View style={styles.header}></View>
-            <EvCalc />
-            <FooterMenu  />
+            <ScrollView style={styles.rooms}>
+                {
+                    this.state.room.map(api=>{
+                        return <Rooms key={api.id} id={api.id} name={api.name} />
+                    })
+                }
+            </ScrollView>
+            <View style={styles.footer}>
+                <FooterMenu  />
+            </View>
         </View>
     );
   }
@@ -31,12 +51,14 @@ const styles = StyleSheet.create({
       backgroundColor: '#36454F',
       zIndex: 10
   },
-  footer__menu : {
-      position : 'absolute',
-      bottom : 0,
-      height: 75,
-      width: '100%',
-      backgroundColor: '#36454F',
-
+  rooms : {
+     width : '100%',
+     paddingTop : 2,
+     paddingBottom : 150,
+     paddingHorizontal : 20
+  },
+  footer: {
+      width : '100%',
+      marginTop : 5
   }
 });

@@ -17,7 +17,7 @@ export default class FooterMenu extends Component {
 
 const styles = StyleSheet.create({
     footer__menu : {
-        position : 'absolute',
+        position : 'relative',
         bottom : 0,
         height: 75,
         width: '100%',
