@@ -6,6 +6,11 @@ import FooterMenu from "./src/footer-menu/footer-menu";
 
 import {_URL} from "./config.api";
 import ItemSettings from "./src/item-settings/ItemSettings";
+// import {createStore} from "redux";
+// import {Provider} from "react-redux";
+// import {rootReducer} from "./src/redux/rootReducer";
+
+// const store = createStore(rootReducer)
 
 export default class App extends Component {
     constructor(props) {
@@ -79,48 +84,50 @@ export default class App extends Component {
 
     render() {
     return (
-        <View style={styles.container}>
-          <View style={styles.header}></View>
-            {
-                this.state.isShowRoom
-                ? <ScrollView style={styles.rooms}>
-                    {
-                        this.state.room.map(api=>{
-                            return <Rooms key={api.id} showItems={this.showItems} bool={this.state.isShowRoom} id={api.id} name={api.name} />
-                        })
-                    }
-                </ScrollView>
-                : null
-            }
-            {
-                this.state.isShowItem
-                    ?<Animated.View style={[
-                        styles.roomItem,{
-                        transform : [{translateX : this.state.swipe}],
-                        opacity : this.state.hide
+        // <Provider store={store}>
+            <View style={styles.container}>
+              <View style={styles.header}></View>
+                {
+                    this.state.isShowRoom
+                    ? <ScrollView style={styles.rooms}>
+                        {
+                            this.state.room.map(api=>{
+                                return <Rooms key={api.id} showItems={this.showItems} bool={this.state.isShowRoom} id={api.id} name={api.name} />
+                            })
                         }
-                    ]}>
-                        <View style={styles.roomItem}>
-                            <RoomItem itemSettings={this.itemSettings} name={this.state.currentRoom} items={this.state.items} />
-                        </View>
-                    </Animated.View>
-                : null
-            }
-            {
-                this.state.isShowItemSettings
-                    ? <Animated.View style={[
-                        styles.itemSettings,{
-                        transform: [{translateX: this.state.settingsSwipe}]
-                        }
-                    ]}>
-                        <View style={styles.itemSettings}><ItemSettings room={this.state.room} item_types={this.state.item_types} settings={ this.state.currentSettings } /></View>
-                      </Animated.View>
+                    </ScrollView>
                     : null
-            }
-            <View style={styles.footer}>
-                {/*<FooterMenu  />*/}
+                }
+                {
+                    this.state.isShowItem
+                        ?<Animated.View style={[
+                            styles.roomItem,{
+                            transform : [{translateX : this.state.swipe}],
+                            opacity : this.state.hide
+                            }
+                        ]}>
+                            <View style={styles.roomItem}>
+                                <RoomItem itemSettings={this.itemSettings} name={this.state.currentRoom} items={this.state.items} />
+                            </View>
+                        </Animated.View>
+                    : null
+                }
+                {
+                    this.state.isShowItemSettings
+                        ? <Animated.View style={[
+                            styles.itemSettings,{
+                            transform: [{translateX: this.state.settingsSwipe}]
+                            }
+                        ]}>
+                            <View style={styles.itemSettings}><ItemSettings room={this.state.room} item_types={this.state.item_types} settings={ this.state.currentSettings } /></View>
+                          </Animated.View>
+                        : null
+                }
+                <View style={styles.footer}>
+                    {/*<FooterMenu  />*/}
+                </View>
             </View>
-        </View>
+        // </Provider>
     );
   }
 }
@@ -162,7 +169,6 @@ const styles = StyleSheet.create({
     width : '100%',
     height : '100%',
     paddingBottom : 100,
-    padding : 10,
     paddingTop: 20,
   },
   footer: {

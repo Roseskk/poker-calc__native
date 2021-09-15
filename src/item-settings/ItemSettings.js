@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 
 import {_URL} from "../../config.api";
 
@@ -7,18 +7,43 @@ export default class ItemSettings extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentRoom : this.props.settings[0].room
+            currentType : this.props.settings[0].type,
+            currentRoom : this.props.settings[0].room,
+            currentRoomId : '',
+            isSwiped : false,
+            swipeRoom : new Animated.Value(900),
+            swipeType : new Animated.Value(900)
         }
 
         this.onChangeRoom = this.onChangeRoom.bind(this);
+        this.onPressRoom = this.onPressRoom.bind(this);
+        this.onChangeType = this.onChangeType.bind(this);
     }
 
     componentDidMount() {
 
     }
     onChangeRoom() {
-
+        this.setState({isSwiped : !this.state.isSwiped})
+        Animated.timing(this.state.swipeRoom  ,{
+            toValue : this.state.isSwiped ? 900 : 200,
+            duration : 1000,
+            useNativeDriver: true
+        }).start();
     }
+    onChangeType() {
+        this.setState({isSwiped : !this.state.isSwiped})
+        Animated.timing(this.state.swipeType  ,{
+            toValue : this.state.isSwiped ? 900 : 400,
+            duration : 1000,
+            useNativeDriver: true
+        }).start();
+    }
+    onPressRoom(name,id) {
+        this.setState({ currentRoom : name, currentRoomId : id });
+        this.onChangeRoom();
+    }
+
 
     render() {
         return(
@@ -37,19 +62,59 @@ export default class ItemSettings extends Component {
                         <Text style={styles.text}>Изменить</Text>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.display__room}>
-                    <Text style= {styles.title}>Аудитории</Text>
-                    <View style={styles.room__wrapper}>
-                    {
-                        this.props.room.map(room=>{
-                            return<TouchableOpacity style={styles.room__items}>
-                                <Text style={styles.room__text}>{room.name}</Text>
-                            </TouchableOpacity>
-
-                        })
-                    }
-                    </View>
+                <View style={styles.button}>
+                    <Text style={styles.room}>  Тип : {this.state.currentType}</Text>
+                    <TouchableOpacity
+                        style={styles.change}
+                        onPress={this.onChangeType}>
+                        <Text style={styles.text}>Изменить</Text>
+                    </TouchableOpacity>
                 </View>
+                <Animated.View style={[
+                    styles.display__room, {
+                        transform : [{translateY : this.state.swipeRoom}]
+                    }
+                ]}>
+                    <View style={styles.display__room}>
+                        <Text style= {styles.title}>Выбрать аудиторию</Text>
+                        <View style={styles.room__wrapper}>
+                        {
+                            this.props.room.map(room=>{
+                                return<TouchableOpacity
+                                    style={styles.room__items}
+                                    onPress={()=>this.onPressRoom(room.name, room.id)}
+                                >
+                                    <Text style={styles.room__text}>{room.name}</Text>
+                                </TouchableOpacity>
+
+                            })
+                        }
+                        </View>
+                </View>
+                </Animated.View>
+                <Animated.View style={[
+                    styles.display__type, {
+                        transform : [{translateY : this.state.swipeType}]
+                    }
+                ]}>
+                    <View style={styles.display__type}>
+                        <Text style= {styles.title}>Выбрать аудиторию</Text>
+                        <View style={styles.room__wrapper}>
+                            {
+                                this.props.item_types.map(type=>{
+                                    return<TouchableOpacity
+                                        style={styles.room__items}
+                                        // onPress={()=>this.onPressRoom(room.name, room.id)} // Добавить событие onPress
+                                    >
+                                        {/*<p>ОПТИМИЗИРОВАТЬ ЭТО ГОВНО</p>*/ }
+                                        <Text style={styles.room__text}>{type.name}</Text>
+                                    </TouchableOpacity>
+
+                                })
+                            }
+                        </View>
+                    </View>
+                </Animated.View>
             </View>
         )
     }
@@ -138,11 +203,23 @@ const styles = StyleSheet.create({
         backgroundColor : 'black',
         borderRadius : 10
     },
+    display__type : {
+        position : 'absolute',
+
+
+        width : '100%',
+        height: '100%',
+
+        backgroundColor : 'black',
+        borderRadius : 10
+    },
     room__wrapper : {
         marginTop : 40,
         display : 'flex',
         flexDirection : 'row',
         flexWrap : 'wrap',
+        alignItems : 'center',
+        justifyContent: 'center',
         width : '100%',
         opacity: 1,
     },

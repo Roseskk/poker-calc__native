@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {StyleSheet, TouchableOpacity, Text, Button, View} from 'react-native';
+import {connect} from "react-redux";
 
-export default class Rooms extends Component {
+ class Rooms extends Component {
     constructor(props) {
         super(props);
         this.state = { isActiveRoom : true }
@@ -18,6 +19,14 @@ export default class Rooms extends Component {
         )
     }
 }
+
+// const mapStateToProps = (state) => {
+//
+//     return state
+// }
+//
+// export default connect(mapStateToProps,null)(Rooms)
+export default Rooms
 
 const styles = StyleSheet.create({
     container : {
