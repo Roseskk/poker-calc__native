@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import {Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 
 import {_URL} from "../../config.api";
+import RoomChoice from "./roomChoice/RoomChoice";
+import TypeChoice from "./typeChoice/TypeCoice";
 
 export default class ItemSettings extends Component {
     constructor(props) {
@@ -54,67 +56,9 @@ export default class ItemSettings extends Component {
                     selectTextOnFocus={false}
                     value={this.props.settings[0].inventory_id}
                 />
-                <View style={styles.button}>
-                    <Text style={styles.room}>  Аудитория : {this.state.currentRoom}</Text>
-                    <TouchableOpacity
-                        style={styles.change}
-                        onPress={this.onChangeRoom}>
-                        <Text style={styles.text}>Изменить</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.button}>
-                    <Text style={styles.room}>  Тип : {this.state.currentType}</Text>
-                    <TouchableOpacity
-                        style={styles.change}
-                        onPress={this.onChangeType}>
-                        <Text style={styles.text}>Изменить</Text>
-                    </TouchableOpacity>
-                </View>
-                <Animated.View style={[
-                    styles.display__room, {
-                        transform : [{translateY : this.state.swipeRoom}]
-                    }
-                ]}>
-                    <View style={styles.display__room}>
-                        <Text style= {styles.title}>Выбрать аудиторию</Text>
-                        <View style={styles.room__wrapper}>
-                        {
-                            this.props.room.map(room=>{
-                                return<TouchableOpacity
-                                    style={styles.room__items}
-                                    onPress={()=>this.onPressRoom(room.name, room.id)}
-                                >
-                                    <Text style={styles.room__text}>{room.name}</Text>
-                                </TouchableOpacity>
-
-                            })
-                        }
-                        </View>
-                </View>
-                </Animated.View>
-                <Animated.View style={[
-                    styles.display__type, {
-                        transform : [{translateY : this.state.swipeType}]
-                    }
-                ]}>
-                    <View style={styles.display__type}>
-                        <Text style= {styles.title}>Выбрать аудиторию</Text>
-                        <View style={styles.room__wrapper}>
-                            {
-                                this.props.item_types.map(type=>{
-                                    return<TouchableOpacity
-                                        style={styles.room__items}
-                                        // onPress={()=>this.onPressRoom(room.name, room.id)} // Добавить событие onPress
-                                    >
-                                        {/*<p>ОПТИМИЗИРОВАТЬ ЭТО ГОВНО</p>*/ }
-                                        <Text style={styles.room__text}>{type.name}</Text>
-                                    </TouchableOpacity>
-
-                                })
-                            }
-                        </View>
-                    </View>
-                </Animated.View>
+                <RoomChoice  settings={this.props.settings} room={this.props.room} />
+                <TypeChoice  settings={this.props.settings} item_types={this.props.item_types} />
+                <Text>asdasd</Text>
             </View>
         )
     }
@@ -223,5 +167,4 @@ const styles = StyleSheet.create({
         width : '100%',
         opacity: 1,
     },
-
 })
