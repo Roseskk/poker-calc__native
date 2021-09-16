@@ -12,7 +12,7 @@ import ItemSettings from "./src/item-settings/ItemSettings";
 
 // const store = createStore(rootReducer)
 
-export default class App extends Component {
+class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -131,6 +131,8 @@ export default class App extends Component {
     );
   }
 }
+
+export default  App;
 
 const styles = StyleSheet.create({
   container: {

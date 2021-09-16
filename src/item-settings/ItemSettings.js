@@ -4,6 +4,7 @@ import {Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, Vie
 import {_URL} from "../../config.api";
 import RoomChoice from "./roomChoice/RoomChoice";
 import TypeChoice from "./typeChoice/TypeCoice";
+import NotesText from "./notesText/NotesText";
 
 export default class ItemSettings extends Component {
     constructor(props) {
@@ -12,6 +13,8 @@ export default class ItemSettings extends Component {
             currentType : this.props.settings[0].type,
             currentRoom : this.props.settings[0].room,
             currentRoomId : '',
+            currentTypeId : '',
+            currentNote : '',
             isSwiped : false,
             swipeRoom : new Animated.Value(900),
             swipeType : new Animated.Value(900)
@@ -22,16 +25,20 @@ export default class ItemSettings extends Component {
         this.onChangeType = this.onChangeType.bind(this);
         this.onReadType = this.onReadType.bind(this);
         this.onReadRoom = this.onReadRoom.bind(this);
+        this.onWriteNote = this.onWriteNote.bind(this);
     }
 
     componentDidMount() {
 
     }
     onReadType(id) {
-       console.log(id)
+       this.setState({currentRoomId : id})
     }
     onReadRoom(id) {
-        console.log(id)
+        this.setState({currentTypeId : id})
+    }
+    onWriteNote(note) {
+        this.setState({currentNote : note})
     }
     onChangeRoom() {
         this.setState({isSwiped : !this.state.isSwiped})
@@ -66,6 +73,8 @@ export default class ItemSettings extends Component {
                 />
                 <RoomChoice  settings={this.props.settings} readID={this.onReadRoom} room={this.props.room} />
                 <TypeChoice  settings={this.props.settings} readId={this.onReadType} item_types={this.props.item_types} />
+                <NotesText noteWrite={this.onWriteNote} />
+
 
 
             </View>
