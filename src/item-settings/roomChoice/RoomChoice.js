@@ -26,7 +26,8 @@ class RoomChoice extends Component {
     }
 
     onPressRoom(name,id) {
-        this.setState({ currentRoom : name, currentRoomId : id });
+        this.props.readID(id);
+        this.setState({ currentRoom : name});
         this.onChangeRoom();
     }
 
@@ -52,6 +53,7 @@ class RoomChoice extends Component {
                             {
                                 this.props.room.map(room=>{
                                     return<TouchableOpacity
+                                        key={room.id}
                                         style={styles.room__items}
                                         onPress={()=>this.onPressRoom(room.name, room.id)}
                                     >
@@ -85,7 +87,6 @@ const styles = StyleSheet.create({
 
 
         borderWidth: 1,
-        borderRadius : 10,
 
         fontSize : 25,
         fontWeight : 'bold',
@@ -134,7 +135,6 @@ const styles = StyleSheet.create({
         width: '50%',
         backgroundColor : 'black',
         padding: 20,
-        borderRadius : 10,
         borderTopLeftRadius : 0,
         borderBottomLeftRadius : 0,
         alignItems: 'flex-end',

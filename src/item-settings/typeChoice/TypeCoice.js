@@ -12,6 +12,7 @@ class TypeChoice extends Component{
         }
 
         this.onChangeType = this.onChangeType.bind(this)
+        this.onpPressType = this.onpPressType.bind(this)
     }
 
     onChangeType() {
@@ -22,12 +23,17 @@ class TypeChoice extends Component{
             useNativeDriver: true
         }).start();
     }
+    onpPressType(name, id ) {
+        this.props.readId(id)
+        this.setState({currentType : name})
+        this.onChangeType()
+    }
 
     render() {
         return(
             <View style={styles.container}>
                 <View style={styles.button}>
-                    <Text style={styles.room}>  Аудитория : {this.state.currentRoom}</Text>
+                    <Text style={styles.room}>  Тип : {this.state.currentType}</Text>
                     <TouchableOpacity
                         style={styles.change}
                         onPress={this.onChangeType}>
@@ -44,12 +50,12 @@ class TypeChoice extends Component{
                             {
                                 this.props.item_types.map(type=>{
                                     return<TouchableOpacity
+                                        key={type.id}
                                         style={styles.room__items}
-                                        // onPress={()=>this.onPressRoom(type.name, type.id)}
+                                        onPress={()=>this.onpPressType(type.name, type.id)}
                                     >
                                         <Text style={styles.room__text}>{type.name}</Text>
                                     </TouchableOpacity>
-
                                 })
                             }
                         </View>
@@ -77,7 +83,7 @@ const styles = StyleSheet.create({
 
 
         borderWidth: 1,
-        borderRadius : 10,
+
 
         fontSize : 25,
         fontWeight : 'bold',
@@ -126,7 +132,7 @@ const styles = StyleSheet.create({
         width: '50%',
         backgroundColor : 'black',
         padding: 20,
-        borderRadius : 10,
+
         borderTopLeftRadius : 0,
         borderBottomLeftRadius : 0,
         alignItems: 'flex-end',

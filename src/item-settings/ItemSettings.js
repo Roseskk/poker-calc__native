@@ -20,10 +20,18 @@ export default class ItemSettings extends Component {
         this.onChangeRoom = this.onChangeRoom.bind(this);
         this.onPressRoom = this.onPressRoom.bind(this);
         this.onChangeType = this.onChangeType.bind(this);
+        this.onReadType = this.onReadType.bind(this);
+        this.onReadRoom = this.onReadRoom.bind(this);
     }
 
     componentDidMount() {
 
+    }
+    onReadType(id) {
+       console.log(id)
+    }
+    onReadRoom(id) {
+        console.log(id)
     }
     onChangeRoom() {
         this.setState({isSwiped : !this.state.isSwiped})
@@ -56,9 +64,10 @@ export default class ItemSettings extends Component {
                     selectTextOnFocus={false}
                     value={this.props.settings[0].inventory_id}
                 />
-                <RoomChoice  settings={this.props.settings} room={this.props.room} />
-                <TypeChoice  settings={this.props.settings} item_types={this.props.item_types} />
-                <Text>asdasd</Text>
+                <RoomChoice  settings={this.props.settings} readID={this.onReadRoom} room={this.props.room} />
+                <TypeChoice  settings={this.props.settings} readId={this.onReadType} item_types={this.props.item_types} />
+
+
             </View>
         )
     }
