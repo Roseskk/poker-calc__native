@@ -11,8 +11,8 @@ export default class ItemSettings extends Component {
         this.state = {
             currentType : this.props.settings[0].type,
             currentRoom : this.props.settings[0].room,
-            currentRoomId : this.props.settings[0].room_id,
-            currentTypeId : this.props.settings[0].item_type_id,
+            currentRoomId : '',
+            currentTypeId : '',
             currentNote : ' ',
             isSwiped : false,
             swipeRoom : new Animated.Value(900),
@@ -56,24 +56,31 @@ export default class ItemSettings extends Component {
         }).start();
     }
      onSubmitItem() {
-        let payload = JSON.stringify({
-            inventory_id : this.props.settings[0].inventory_id,
-            room_id:this.state.currentTypeId,
-            item_type_id:this.state.currentRoomId,
-            notes: this.state.currentNote
-        })
-         fetch('https://mtb.ibnd.ru/api/updateitem',{
-             method:"POST",
-             headers: {
-                 'Content-Type': 'application/json'
-             },
-
-             body : payload
-        })
-            .then(next=>{
-                // this.setState({room_id: '' , item_type_id : ''})
-                this.props.submited(this.props.settings[0].inventory_id)
+        console.log('room',this.state.currentTypeId)
+        console.log('type',this.state.currentRoomId)
+        if (this.state.currentTypeId === '' || this.state.currentRoomId === '') {
+            console.log('Err')
+        } else {
+            let payload = JSON.stringify({
+                inventory_id : this.props.settings[0].inventory_id,
+                room_id:this.state.currentTypeId,
+                item_type_id:this.state.currentRoomId,
+                notes: this.state.currentNote
             })
+            fetch('https://mtb.ibnd.ru/api/updateitem',{
+                method:"POST",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+
+                body : payload
+            })
+                .then(next=>{
+                    // this.setState({room_id: '' , item_type_id : ''})
+                    console.log('200 send')
+                    this.props.submited(this.props.settings[0].inventory_id)
+                })
+        }
     }
 
 
