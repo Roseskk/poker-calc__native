@@ -23,19 +23,20 @@ export default class RoomItem extends Component {
 
     render() {
         return(
-            <ScrollView style={styles.container}>
-                <Text style={styles.title}>Таблица {this.props.name}</Text>
-                <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}} >
-                    <Row data={this.state.headers} style={styles.head} textStyle={styles.text}/>
-                    {
-                        this.props.items.map(item=>{
-                            return <TouchableOpacity key={item.id} onPress={()=>this.props.itemSettings(item.inventory_id)}  style={styles.rows}>
-                             <Row  data={[ [item.inventory_id], [item.type], [item.notes]]} style={styles.head}  textStyle={styles.text}/>
-                            </TouchableOpacity>
-                        })
-                    }
-                </Table>
-            </ScrollView>
+                <ScrollView style={styles.container}>
+                    <TouchableOpacity style={styles.linkback} onPress={this.props.linkBack}><Text style={styles.text__Italic}>&lArr;  Назад</Text></TouchableOpacity>
+                    <Text style={styles.title}>Таблица {this.props.name}</Text>
+                    <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}} >
+                        <Row data={this.state.headers} style={styles.head} textStyle={styles.text}/>
+                        {
+                            this.props.items.map(item=>{
+                                return <TouchableOpacity key={item.id} onPress={()=>this.props.itemSettings(item.inventory_id)}  style={styles.rows}>
+                                 <Row  data={[ [item.inventory_id], [item.type], [item.notes]]} style={styles.head}  textStyle={styles.text}/>
+                                </TouchableOpacity>
+                            })
+                        }
+                    </Table>
+                </ScrollView>
         )
     }
 }
@@ -44,5 +45,22 @@ const styles = StyleSheet.create({
     title : {textAlign : 'center' , fontWeight : 'bold', fontSize : 20, marginBottom: 20},
     head: { height: 40 },
     text: { margin: 6 },
-    rows : { marginTop : 3, backgroundColor : 'lightblue' }
+    rows : { marginTop : 3, backgroundColor : 'lightblue' },
+    linkback : {
+        width: '100%',
+        backgroundColor : 'black',
+        borderRadius : 10,
+
+        borderWidth : 1,
+        padding: 5,
+        marginBottom : 5,
+        alignItems : 'flex-start'
+
+    },
+    text__Italic : {
+        color : 'white',
+        fontSize : 17,
+        fontWeight : '900',
+        fontStyle : 'italic',
+    },
 });

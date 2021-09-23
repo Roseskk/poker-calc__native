@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
-import {Animated, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Animated, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 
-import {_URL} from "../../config.api";
 import RoomChoice from "./roomChoice/RoomChoice";
 import TypeChoice from "./typeChoice/TypeCoice";
 import NotesText from "./notesText/NotesText";
@@ -12,20 +11,20 @@ export default class ItemSettings extends Component {
         this.state = {
             currentType : this.props.settings[0].type,
             currentRoom : this.props.settings[0].room,
-            currentRoomId : '',
-            currentTypeId : '',
-            currentNote : '',
+            currentRoomId : this.props.settings[0].room_id,
+            currentTypeId : this.props.settings[0].item_type_id,
+            currentNote : ' ',
             isSwiped : false,
             swipeRoom : new Animated.Value(900),
             swipeType : new Animated.Value(900)
         }
 
         this.onChangeRoom = this.onChangeRoom.bind(this);
-        this.onPressRoom = this.onPressRoom.bind(this);
         this.onChangeType = this.onChangeType.bind(this);
         this.onReadType = this.onReadType.bind(this);
         this.onReadRoom = this.onReadRoom.bind(this);
         this.onWriteNote = this.onWriteNote.bind(this);
+        this.onSubmitItem = this.onSubmitItem.bind(this);
     }
 
     componentDidMount() {
@@ -56,15 +55,39 @@ export default class ItemSettings extends Component {
             useNativeDriver: true
         }).start();
     }
-    onPressRoom(name,id) {
-        this.setState({ currentRoom : name, currentRoomId : id });
-        this.onChangeRoom();
+     onSubmitItem() {
+        let payload = JSON.stringify({
+            inventory_id : this.props.settings[0].inventory_id,
+            room_id:this.state.currentTypeId,
+            item_type_id:this.state.currentRoomId,
+            notes: this.state.currentNote
+        })
+         fetch('https://mtb.ibnd.ru/api/updateitem',{
+             method:"POST",
+             headers: {
+                 'Content-Type': 'application/json'
+             },
+
+             body : payload
+        })
+            .then(next=>{
+                // this.setState({room_id: '' , item_type_id : ''})
+                this.props.submited(this.props.settings[0].inventory_id)
+            })
     }
 
 
     render() {
         return(
             <View style={styles.container}>
+                <View>
+                    <TouchableOpacity
+                    style={styles.linkback}
+                    onPress={()=>this.props.linkBack(this.props.settings[0].inventory_id)}
+                    >
+                        <Text style={styles.text}>Назад</Text>
+                    </TouchableOpacity>
+                </View>
                 <TextInput
                     style={styles.input}
                     editable={false}
@@ -73,7 +96,15 @@ export default class ItemSettings extends Component {
                 />
                 <RoomChoice  settings={this.props.settings} readID={this.onReadRoom} room={this.props.room} />
                 <TypeChoice  settings={this.props.settings} readId={this.onReadType} item_types={this.props.item_types} />
-                <NotesText noteWrite={this.onWriteNote} />
+                {/*<NotesText noteWrite={this.onWriteNote} />*/}
+                <View style={styles.button__submit}>
+                    <TouchableOpacity
+                        style={styles.change}
+                        onPress={this.onSubmitItem}
+                        >
+                        <Text style={styles.text}>Отправить</Text>
+                    </TouchableOpacity>
+                </View>
 
 
 
@@ -88,7 +119,7 @@ const styles = StyleSheet.create({
         flexDirection : 'column',
         width : '100%',
         height : '100%',
-        marginTop : 50,
+        marginTop : 1,
         // backgroundColor : 'red'
     },
     input : {
@@ -185,4 +216,19 @@ const styles = StyleSheet.create({
         width : '100%',
         opacity: 1,
     },
+    button__submit : {
+        marginTop :10
+    },
+    linkback : {
+        width: '50%',
+        backgroundColor : 'black',
+        borderRadius : 10,
+        borderTopLeftRadius : 0,
+        borderBottomLeftRadius : 0,
+        borderWidth : 1,
+        padding: 5,
+        marginBottom : 5,
+        alignItems : 'center'
+
+    }
 })

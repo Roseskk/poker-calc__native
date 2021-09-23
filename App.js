@@ -31,6 +31,9 @@ class App extends Component {
 
         this.showItems = this.showItems.bind(this);
         this.itemSettings = this.itemSettings.bind(this)
+        this.savedForm = this.savedForm.bind(this)
+        this.linkBack = this.linkBack.bind(this)
+        this.roomsBack = this.roomsBack.bind(this)
     }
 
     componentDidMount() {
@@ -62,16 +65,17 @@ class App extends Component {
         fetch(_URL + `item/${id}`)
             .then(response => response.json())
             .then(data => {
-                this.setState({ isShowItemSettings : true, currentSettings : data });
+                console.log(data)
+                this.setState({ isShowItemSettings : !this.state.isShowItemSettings, currentSettings : data });
             })
         Animated.timing(this.state.swipe  ,{
-            toValue : 700,
-            duration : 1000,
+            toValue : this.state.isShowItemSettings ? 0 : 700,
+            duration : 250,
             useNativeDriver: true
         }).start();
         Animated.timing(this.state.settingsSwipe, {
-            toValue : 0,
-            duration: 1000,
+            toValue : this.state.isShowItemSettings ? -600 : 0,
+            duration: 250,
             useNativeDriver : true
         }).start();
         // Animated.timing(this.state.hide ,{
@@ -80,6 +84,16 @@ class App extends Component {
         //     useNativeDriver: true
         // }).start();
         // console.log(id)
+    }
+    savedForm(id) {
+        this.itemSettings(id)
+    }
+    linkBack(id) {
+        this.itemSettings(id)
+    }
+    roomsBack() {
+        this.setState({ isShowRoom : true })
+        this.setState({isShowItem : false })
     }
 
     render() {
@@ -107,7 +121,7 @@ class App extends Component {
                             }
                         ]}>
                             <View style={styles.roomItem}>
-                                <RoomItem itemSettings={this.itemSettings} name={this.state.currentRoom} items={this.state.items} />
+                                <RoomItem linkBack={this.roomsBack} itemSettings={this.itemSettings} name={this.state.currentRoom} items={this.state.items} />
                             </View>
                         </Animated.View>
                     : null
@@ -119,7 +133,7 @@ class App extends Component {
                             transform: [{translateX: this.state.settingsSwipe}]
                             }
                         ]}>
-                            <View style={styles.itemSettings}><ItemSettings room={this.state.room} item_types={this.state.item_types} settings={ this.state.currentSettings } /></View>
+                            <View style={styles.itemSettings}><ItemSettings linkBack={this.linkBack} submited={this.savedForm} room={this.state.room} item_types={this.state.item_types} settings={ this.state.currentSettings } /></View>
                           </Animated.View>
                         : null
                 }
@@ -171,7 +185,7 @@ const styles = StyleSheet.create({
     width : '100%',
     height : '100%',
     paddingBottom : 100,
-    paddingTop: 20,
+    paddingTop: 5,
   },
   footer: {
       width : '100%',

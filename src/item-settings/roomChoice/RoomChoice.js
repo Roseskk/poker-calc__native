@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Animated, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 class RoomChoice extends Component {
     constructor(props) {

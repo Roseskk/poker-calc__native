@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Animated, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {StyleSheet,TextInput, View} from 'react-native';
 
 class NotesText extends Component {
     constructor(props) {
@@ -22,11 +22,12 @@ class NotesText extends Component {
         return(
             <View style={styles.container}>
                 <TextInput
+                    editable={false}
                     multiline={true}
                     numberOfLines={4}
                     onChangeText={this.notesChange}
                     style={styles.input}
-                    placeholder= 'Примечание'
+                    placeholder= 'Примечание TEST'
                     value={this.state.currentText}
                 />
             </View>
@@ -41,10 +42,8 @@ const styles = StyleSheet.create({
     container : {
         display : 'flex',
         flexDirection : 'column',
-        width : '90%',
-        height : '100%',
-        paddingLeft : 35,
-        marginTop : 10,
+
+        padding: 20
 
     },
     input : {
