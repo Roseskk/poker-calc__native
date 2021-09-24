@@ -14,6 +14,7 @@ export default class FooterMenu extends Component {
                     <Text style={styles.text}>Главная</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                    onPress={()=>this.props.camera()}
                     style={styles.link}
                 >
                     <Text style={styles.text}>Камера</Text>

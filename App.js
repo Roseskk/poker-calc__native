@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {Animated, ScrollView, StyleSheet,TouchableOpacity, Text, View} from 'react-native';
+import {Animated, ScrollView, StyleSheet, TouchableOpacity, Text, View, Dimensions} from 'react-native';
 import Rooms from "./src/rooms/Rooms";
 import RoomItem from "./src/roomitems/RoomItem";
 import FooterMenu from "./src/footer-menu/footer-menu";
 import { Camera } from 'expo-camera';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 
 
 import {_URL} from "./config.api";
@@ -13,6 +14,8 @@ import ItemSettings from "./src/item-settings/ItemSettings";
 // import {rootReducer} from "./src/redux/rootReducer";
 
 // const store = createStore(rootReducer)
+const DEVICE_WIDTH = Dimensions.get('window').width
+const DEVICE_HEIGHT = Dimensions.get('window').height
 
 class App extends Component {
     constructor(props) {
@@ -24,9 +27,11 @@ class App extends Component {
             currentRoom: '',
             currentItems: '',
             currentSettings : [],
+            itemId: '',
             isShowRoom : true ,
             isShowItem : false ,
             isShowItemSettings : false,
+            cameraStatus : false,
             swipe : new Animated.Value(0),
             hide : new Animated.Value(1),
             settingsSwipe : new Animated.Value(-600),
@@ -38,6 +43,7 @@ class App extends Component {
         this.savedForm = this.savedForm.bind(this)
         this.linkBack = this.linkBack.bind(this)
         this.roomsBack = this.roomsBack.bind(this)
+        this.onCamera = this.onCamera.bind(this)
     }
 
     componentDidMount() {
@@ -106,15 +112,39 @@ class App extends Component {
         this.setState({ isShowRoom : true })
         this.setState({isShowItem : false })
     }
+    onCamera(result) {
+        if(result !== undefined) {
+            let id = result.data
+            console.log(id)
+            this.itemSettings(id)
+            this.setState({ isShowRoom : false, cameraStatus : false , isShowItem : true })
+            console.log('НАЙДЕНА ', result.data)
+            // fetch(_URL + `roomitems/${id}`)
+            //     .then(response => response.json())
+            //     .then(data=>{
+            //         this.setState({items : data})
+            //     })
+            // this.setState({ itemId : result.data })
+        }
+        this.setState({cameraStatus : !this.state.cameraStatus})
+    }
 
     render() {
     return (
         // <Provider store={store}>
             <View style={styles.container}>
                 <View style={styles.body}>
-                {/*<Camera style={styles.camera} >*/}
-
-                {/*</Camera>*/}
+                    {
+                        this.state.cameraStatus ? <BarCodeScanner
+                                onBarCodeScanned={this.onCamera}
+                                style={
+                                    {
+                                    height : DEVICE_HEIGHT,
+                                    width : DEVICE_WIDTH
+                                }}
+                            />
+                            : null
+                    }
                   <View style={styles.header}></View>
                     {
                         this.state.isShowRoom
@@ -154,7 +184,7 @@ class App extends Component {
                     }
                 </View>
                 <View style={styles.footer}>
-                    <FooterMenu  />
+                    <FooterMenu camera={this.onCamera}  />
                 </View>
             </View>
         // </Provider>
